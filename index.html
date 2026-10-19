@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="media/logo.png">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Espace GSN Semences</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap">
+<style>
+/* Calendrier éditorial : bandeau titre, vue du mois en grille, puis une section par semaine avec les cartes de publication */
+:root{
+  --bg:#f6f4ee; --surface:#ffffff; --ink:#15281c; --muted:#5b6a5f; --line:#dfe3da;
+  --green:#1f5c34; --leaf:#5a9e45; --violet:#6b2e7f; --violet-soft:#efe4f3; --red:#c9221b;
+  --chip:#e8efe4; --shadow:0 1px 2px rgba(21,40,28,.06),0 6px 18px rgba(21,40,28,.06);
+  --display:'Poppins',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --body:'Poppins',system-ui,-apple-system,'Segoe UI',sans-serif;
+  
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1712; --surface:#17221b; --ink:#e9efe6; --muted:#a3b2a6; --line:#2a3a2f;
+  --green:#7cc28a; --leaf:#8fcf6f; --violet:#c99be0; --violet-soft:#2c1f33; --red:#ff7a70;
+  --chip:#22332a; --shadow:none; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1712; --surface:#17221b; --ink:#e9efe6; --muted:#a3b2a6; --line:#2a3a2f;
+  --green:#7cc28a; --leaf:#8fcf6f; --violet:#c99be0; --violet-soft:#2c1f33; --red:#ff7a70;
+  --chip:#22332a; --shadow:none; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1120px;margin:0 auto;padding-block:32px 64px;display:flex;flex-direction:column;gap:40px}
+header{display:flex;flex-direction:column;gap:14px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--green)}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(34px,6vw,56px);line-height:1.05;margin:0;text-wrap:balance}
+h1 em{font-style:italic;font-weight:500;color:var(--violet)}
+.facts{display:flex;flex-wrap:wrap;gap:8px 20px;color:var(--muted);font-size:14px}
+.facts b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.times{display:flex;flex-wrap:wrap;gap:8px}
+.net{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;padding:4px 12px;border-radius:999px;background:var(--chip)}
+.dot{width:8px;height:8px;border-radius:50%}
+.fb{background:#1877f2}.tt{background:#111;outline:1px solid #888}.li{background:#0a66c2}
+h2{font-family:var(--display);font-size:22px;font-weight:700;margin:0}
+.month{display:flex;flex-direction:column;gap:12px}
+.gridwrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.grid{display:grid;grid-template-columns:110px repeat(7,minmax(84px,1fr));min-width:780px}
+.grid>div{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:8px;min-height:44px}
+.grid .hd{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;min-height:0}
+.grid .wk{font-size:12px;font-weight:600;color:var(--green);line-height:1.3}
+.grid .wk span{display:block;color:var(--muted);font-weight:500}
+.day{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;display:flex;flex-direction:column;gap:6px}
+.day a{display:flex;flex-direction:column;gap:4px;text-decoration:none;color:var(--ink)}
+.day img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:6px;max-width:100%}
+.day .lbl{font-size:11px;font-weight:500;line-height:1.25}
+.day .vid{color:var(--violet)}
+.week{display:flex;flex-direction:column;gap:16px}
+.weekhead{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;border-top:2px solid var(--ink);padding-top:14px}
+.weekhead p{margin:0;color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:820px){.cards{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);display:grid;grid-template-columns:180px minmax(0,1fr);gap:16px;padding:14px;scroll-margin-top:16px}
+@media (max-width:480px){.card{grid-template-columns:1fr}}
+.media img,.media video{width:100%;border-radius:10px;display:block;background:#000;max-width:100%}
+.media img{aspect-ratio:4/5;object-fit:cover}
+.media video{aspect-ratio:9/16;object-fit:cover}
+.info{display:flex;flex-direction:column;gap:10px;min-width:0}
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
+.date{font-weight:700;font-size:16px}
+.chip{font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;background:var(--chip);color:var(--green)}
+.chip.v{background:var(--violet-soft);color:var(--violet)}
+.title{font-weight:600;font-size:17px;line-height:1.3;margin:0}
+.file{font-size:12px;color:var(--muted);word-break:break-all}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line)}
+.tabs button{font:inherit;font-size:13px;font-weight:500;border:0;background:none;color:var(--muted);padding:6px 10px;cursor:pointer;border-bottom:2px solid transparent;display:inline-flex;align-items:center;gap:6px}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--violet)}
+.tabs button:focus-visible,.copy:focus-visible,.done input:focus-visible{outline:2px solid var(--violet);outline-offset:2px}
+.text{white-space:pre-wrap;font-family:var(--body);font-size:14px;line-height:1.55;background:var(--bg);border-radius:10px;padding:12px;margin:0;max-height:220px;overflow:auto}
+.row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px}
+.copy{font:inherit;font-size:13px;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 14px;cursor:pointer}
+.copy:hover{border-color:var(--green)}
+.done{font-size:13px;color:var(--muted);display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.card.isdone{opacity:.62}
+.notes{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+.notes ul{margin:8px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px;color:var(--muted)}
+.notes b{color:var(--ink)}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{height:44px;width:auto;background:#f8f4ec;border-radius:10px;padding:5px 8px}
+.brand b{font-size:15px}.brand span{display:block;font-size:12px;color:var(--muted)}
+.nav{display:flex;gap:6px;flex-wrap:wrap}
+.nav a{font-size:13px;font-weight:600;color:var(--ink);text-decoration:none;padding:6px 12px;border-radius:999px;border:1px solid var(--line)}
+.nav a:hover{border-color:var(--green)}
+.files{display:flex;flex-direction:column;gap:14px;scroll-margin-top:16px}
+.pdf{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;background:var(--green);color:#fff;border-radius:16px;padding:18px 20px}
+:root[data-theme="dark"] .pdf{color:#0f1712}
+.pdf b{font-size:17px}.pdf span{display:block;font-size:13px;opacity:.85}
+.pdf .dl{background:#fff;color:#1f5c34;border-color:#fff}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.ftile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.ftile img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:8px}
+.ftile .fn{font-size:11.5px;line-height:1.3;word-break:break-all}
+.ftile .fs{font-size:11px;color:var(--muted)}
+.dl{font:inherit;font-size:12.5px;font-weight:600;border:1px solid var(--green);color:var(--green);background:transparent;border-radius:999px;padding:5px 12px;cursor:pointer}
+.dl:hover{background:var(--chip)}
+.dl[hidden]{display:none!important}
+.dlnote{font-size:13px;color:var(--muted);margin:0}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand"><img src="media/logo.png" alt="GSN Semences Afrique"><div><b>Espace GSN Semences</b><span>Contenus réseaux sociaux · préparé par Vanes DAYA</span></div></div>
+    <nav class="nav"><a href="#fichiers">Fichiers</a><a href="#m">Calendrier</a><a href="#weeks">Publications</a></nav>
+  </div>
+  <header>
+    <div class="eyebrow">GSN Semences Afrique · Campagne oignon</div>
+    <h1>La Saison <em>du Violet</em></h1>
+    <div class="facts">
+      <span>Du <b>19 octobre</b> au <b>14 novembre 2026</b></span>
+      <span><b>16</b> publications</span>
+      <span><b>10</b> visuels · <b>6</b> vidéos</span>
+      <span><b>4</b> par semaine (lun · mer · ven · sam)</span>
+    </div>
+    <div class="times" aria-label="Heures de publication conseillées">
+      <span class="net"><span class="dot fb"></span>Facebook 18 h</span>
+      <span class="net"><span class="dot tt"></span>TikTok 19 h</span>
+      <span class="net"><span class="dot li"></span>LinkedIn 8 h</span>
+    </div>
+  </header>
+
+  <section class="files" id="fichiers" aria-labelledby="fh">
+    <h2 id="fh">Vos fichiers</h2>
+    <div class="pdf"><div><b>Planning complet en PDF</b><span>29 pages : calendrier, textes par réseau et visuels en HD</span></div>
+      <button class="dl" type="button" data-file="GSN_LaSaisonDuViolet_Planning.pdf" hidden>Télécharger le PDF</button></div>
+    <p class="dlnote" id="dlnote">Les 16 fichiers prêts à publier, en pleine qualité, dans l'ordre du calendrier.</p>
+    <div class="fgrid" id="fgrid"></div>
+  </section>
+
+  <section class="month" aria-labelledby="m">
+    <h2 id="m">Vue du mois</h2>
+    <div class="gridwrap"><div class="grid" id="grid"></div></div>
+  </section>
+
+  <div id="weeks" style="display:flex;flex-direction:column;gap:40px"></div>
+
+</div>
+
+<script>
+const P = [
+ {n:1,w:1,d:'2026-10-19',day:'Lun 19 oct',t:'img',rub:'Lancement',title:'La Saison du Violet est lancée',file:'01_Lun19oct_Visuel_Lancement.jpg',
+  fb:"🌱 La Saison du Violet est lancée !\nC'est le moment de préparer vos pépinières. Pour des bulbes bien formés et une belle récolte, tout commence par la graine.\nAvec l'Oignon Super et l'Oignon Violet de Galmi de GSN Semences, partez sur de bonnes bases.\nPendant 4 semaines, suivez nos conseils, nos images de terrain et nos producteurs.\n📞 Infos : 07 58 11 31 54\n#LaSaisonDuViolet #GSNSemences #OignonCI",
+  tt:"La saison de l'oignon commence 🧅 On est prêts, et vous ?\n#LaSaisonDuViolet #oignon #agriculture #cotedivoire #GSNSemences",
+  li:"GSN Semences Afrique lance « La Saison du Violet », sa campagne dédiée à l'oignon.\nObjectif : accompagner producteurs et distributeurs de Côte d'Ivoire avec des semences de qualité (Oignon Super, Oignon Violet de Galmi) et des conseils concrets, de la pépinière à la récolte.\n#Agriculture #Semences #CoteDIvoire #Agribusiness"},
+ {n:2,w:1,d:'2026-10-21',day:'Mer 21 oct',t:'vid',rub:'Du Champ au Marché',title:'Teaser : il est de retour…',file:'02_Mer21oct_Video_Teaser.mp4',
+  fb:"Il est de retour… 👀\nVigueur, couleur, récolte : le Violet de Galmi revient dans vos champs. Prêts pour la saison ?\n#LaSaisonDuViolet #VioletDeGalmi #GSNSemences",
+  tt:"Le roi des oignons est de retour 🧅🔥\n#oignon #agriculture #cotedivoire #LaSaisonDuViolet #fyp",
+  li:"La saison de l'oignon démarre. Retour en images sur le Violet de Galmi, disponible chez GSN Semences Afrique pour les producteurs et distributeurs ivoiriens.\n#Agriculture #Maraichage #Semences"},
+ {n:3,w:1,d:'2026-10-23',day:'Ven 23 oct',t:'img',rub:'Variété Star',title:'Nos 2 stars : Oignon Super et Violet de Galmi',file:'03_Ven23oct_Visuel_Nos2Stars.jpg',
+  fb:"Deux oignons, une même exigence 💪\n🔴 Oignon Super\n🟣 Oignon Violet de Galmi\nVotre choix pour la saison est fait ? Contactez le commercial de votre zone :\nNord : 07 57 68 73 59\nCentre-Ouest : 07 47 47 91 15\nAbidjan & Sud-Est : 07 86 05 77 87\n#VarieteStar #GSNSemences",
+  tt:"Oignon Super ou Violet de Galmi ? Nos 2 stars de la saison 🧅\n#oignon #semences #agriculture #cotedivoire",
+  li:"Pour la campagne oignon, GSN Semences Afrique met en avant deux variétés : l'Oignon Super et l'Oignon Violet de Galmi.\nNos commerciaux couvrent le Nord, le Centre-Ouest, Abidjan et le Sud-Est.\n#Semences #Distribution #Agribusiness"},
+ {n:4,w:1,d:'2026-10-24',day:'Sam 24 oct',t:'img',rub:'Le Saviez-vous ?',title:'Pourquoi « Galmi » ?',file:'04_Sam24oct_Visuel_LeSaviezVous.jpg',
+  fb:"Le saviez-vous ? 🤔\nLe Violet de Galmi doit son nom à Galmi, une ville du Niger célèbre pour ses oignons dans toute l'Afrique de l'Ouest. Un nom, une réputation.\nVous le saviez ? Dites-le en commentaire 👇\n#LeSaviezVous #VioletDeGalmi #GSNSemences",
+  tt:"Pourquoi « Galmi » ? 🧅 La réponse est sur l'image !\n#lesaviezvous #oignon #afrique #agriculture",
+  li:"Le saviez-vous ? Le Violet de Galmi tient son nom de la ville de Galmi, au Niger, réputée pour sa production d'oignons dans toute la sous-région.\n#Agriculture #AfriqueDeLOuest"},
+ {n:5,w:2,d:'2026-10-26',day:'Lun 26 oct',t:'img',rub:'Le Conseil GSN',title:'Réussir sa pépinière d\'oignon',file:'05_Lun26oct_Visuel_ConseilPepiniere.jpg',
+  fb:"🌱 Le Conseil GSN : réussir sa pépinière d'oignon\n1. Un sol meuble, bien préparé et nivelé\n2. Semer en lignes, sans trop serrer\n3. Arroser régulièrement, sans excès\n4. Protéger les jeunes plants du soleil fort et des nuisibles\nEnregistrez ce post et partagez-le à un producteur 🙏\n#ConseilGSN #Oignon #Maraichage",
+  tt:"4 réflexes pour une pépinière d'oignon réussie ✅ Enregistre pour plus tard !\n#conseil #agriculture #oignon #maraichage",
+  li:"Une bonne récolte se joue dès la pépinière. Nos 4 recommandations pour des plants d'oignon vigoureux, à partager avec vos équipes terrain et vos producteurs partenaires.\n#Agronomie #Maraichage #GSNSemences"},
+ {n:6,w:2,d:'2026-10-28',day:'Mer 28 oct',t:'vid',rub:'Le Conseil GSN',title:'Bien repiquer en 4 gestes',file:'06_Mer28oct_Video_ConseilRepiquage.mp4',
+  fb:"Le repiquage, c'est là que tout se joue 🎯\n4 gestes simples pour une bonne reprise de vos plants. Une question ? Écrivez-nous en message privé.\n#ConseilGSN #Oignon #Maraichage",
+  tt:"Repiquer ses oignons en 4 gestes 🧅👨🏾‍🌾\n#agriculture #conseil #oignon #tuto",
+  li:"Repiquage de l'oignon : 4 bonnes pratiques simples pour sécuriser la reprise des plants et l'homogénéité de la parcelle.\n#Agronomie #Agriculture"},
+ {n:7,w:2,d:'2026-10-30',day:'Ven 30 oct',t:'img',rub:'GSN sur le terrain',title:'Ensemble, dès le semis',file:'07_Ven30oct_Visuel_SurLeTerrain.jpg',
+  fb:"Ensemble, dès le semis 🤝🌱\nSur le terrain aux côtés des groupements de productrices pour bien démarrer la saison. Merci à toutes pour l'accueil !\n#GSNSurLeTerrain #LaSaisonDuViolet",
+  tt:"Semis collectif avec les mamans 💪🌱\n#agriculture #femmes #cotedivoire #oignon",
+  li:"Sur le terrain avec les groupements de productrices : semis collectif et accompagnement en début de saison. Chez GSN Semences Afrique, la qualité d'une semence se prouve au champ.\n#Agriculture #Femmes #Impact"},
+ {n:8,w:2,d:'2026-10-31',day:'Sam 31 oct',t:'vid',rub:'Du Champ au Marché',title:'Du semis à la récolte, en 5 étapes',file:'08_Sam31oct_Video_DuChampAuMarche.mp4',
+  fb:"Semer, entretenir, voir grossir, récolter… 🧅\nDerrière chaque oignon au marché, il y a des semaines de travail. Hommage à nos producteurs !\n#DuChampAuMarche #GSNSemences",
+  tt:"De la graine à la récolte en 15 secondes 🧅⏱️\n#agriculture #oignon #cotedivoire #satisfying",
+  li:"De la pépinière à la récolte : les étapes clés d'une campagne oignon réussie, en images.\n#Agriculture #Maraichage"},
+ {n:9,w:3,d:'2026-11-02',day:'Lun 2 nov',t:'img',rub:'Le Conseil GSN',title:'3 gestes après le repiquage',file:'09_Lun02nov_Visuel_ApresRepiquage.jpg',
+  fb:"Vos plants sont repiqués ? Voici 3 gestes pour de beaux bulbes à la récolte 🧅\n1. Désherber régulièrement autour des plants\n2. Arroser de façon régulière, sans noyer la parcelle\n3. Surveiller chaque semaine maladies et ravageurs\n#ConseilGSN #Oignon",
+  tt:"3 gestes pour de beaux oignons 🧅💪\n#conseil #agriculture #oignon",
+  li:"Après le repiquage, trois pratiques simples font la différence sur le calibre et la qualité des bulbes : désherbage, irrigation régulière et surveillance phytosanitaire.\n#Agronomie #Maraichage"},
+ {n:10,w:3,d:'2026-11-04',day:'Mer 4 nov',t:'vid',rub:'GSN sur le terrain',title:'Sur le terrain avec GSN (mini-reportage)',file:'10_Mer04nov_Video_SurLeTerrain.mp4',
+  fb:"Sur le terrain avec GSN Semences 🎬\nPréparation du sol, semis collectif, plants qui prennent leur place… La qualité se construit dès la graine, et ensemble.\n#GSNSurLeTerrain #LaSaisonDuViolet",
+  tt:"Une journée sur le terrain avec GSN 🎬🌱\n#agriculture #cotedivoire #terrain #oignon #fyp",
+  li:"Immersion terrain : préparation des sols, semis collectif avec un groupement de productrices et suivi des parcelles. Notre engagement va au-delà de la semence.\n#Agriculture #Accompagnement #CoteDIvoire"},
+ {n:11,w:3,d:'2026-11-06',day:'Ven 6 nov',t:'img',rub:'Du Champ au Marché',title:'Aujourd\'hui la graine, demain la récolte',file:'11_Ven06nov_Visuel_GraineRecolte.jpg',
+  fb:"Aujourd'hui, la graine. Demain, la récolte. 🌱➡️🧅\nTout commence avec une semence de confiance.\n#LaQualiteDesLaGraine #GSNSemences",
+  tt:"Aujourd'hui la graine… demain la récolte 🧅\n#oignon #agriculture #patience",
+  li:"La qualité d'une récolte se décide au moment du semis. C'est pourquoi GSN Semences Afrique sélectionne des semences de qualité professionnelle.\n#Semences #Agriculture"},
+ {n:12,w:3,d:'2026-11-07',day:'Sam 7 nov',t:'vid',rub:'Paroles de Producteurs',title:'Hommage aux producteurs',file:'12_Sam07nov_Video_FierteProducteurs.mp4',
+  fb:"Derrière chaque belle récolte, il y a un producteur fier de son travail 👏🏾\nMerci à vous, vous êtes notre plus belle réussite.\n#NosProducteurs #GSNSemences",
+  tt:"Respect aux producteurs 👏🏾🧅\n#agriculture #fierte #cotedivoire #oignon",
+  li:"Nos producteurs partenaires sont au cœur de notre mission. Leur réussite au champ est notre meilleur indicateur de qualité.\n#Agriculture #Impact"},
+ {n:13,w:4,d:'2026-11-09',day:'Lun 9 nov',t:'img',rub:'Variété Star',title:'Team Super ou Team Galmi ?',file:'13_Lun09nov_Visuel_TeamSuperGalmi.jpg',
+  fb:"Team Super 🔴 ou Team Galmi 🟣 ?\nLe débat est ouvert ! Dites-nous en commentaire votre oignon préféré, et pourquoi 👇\n#TeamSuper #TeamGalmi #GSNSemences",
+  tt:"Team Super ou Team Galmi ? 🔴🟣 Réponds en commentaire !\n#oignon #agriculture #cotedivoire #debat",
+  li:"Oignon Super ou Violet de Galmi : quelle variété privilégiez-vous dans vos zones de production, et pourquoi ? Nous attendons les retours de nos partenaires.\n#Semences #Agriculture"},
+ {n:14,w:4,d:'2026-11-11',day:'Mer 11 nov',t:'vid',rub:'Variété Star',title:'Nos semences d\'oignon',file:'14_Mer11nov_Video_NosSemences.mp4',
+  fb:"Prêts pour la saison ? 🧅\nDécouvrez notre gamme d'oignons, disponible dès maintenant chez nos commerciaux.\n#LaSaisonDuViolet #GSNSemences",
+  tt:"Nos semences d'oignon en 15 secondes 🧅✨\n#semences #oignon #agriculture #cotedivoire",
+  li:"GSN Semences Afrique propose une gamme de semences d'oignon pour les producteurs et distributeurs ivoiriens, dont l'Oignon Super et le Violet de Galmi. Contact bureau : 07 58 11 31 54.\n#Semences #Distribution"},
+ {n:15,w:4,d:'2026-11-13',day:'Ven 13 nov',t:'img',rub:'Où trouver GSN',title:'Appelez le commercial de votre zone',file:'15_Ven13nov_Visuel_OuTrouverGSN.jpg',
+  fb:"📍 Où trouver nos semences ? Appelez le commercial de votre zone :\nNord : 07 57 68 73 59\nCentre-Ouest : 07 47 47 91 15\nAbidjan & Sud-Est : 07 86 05 77 87\nBureau Abidjan : 07 58 11 31 54\nPartagez à un producteur qui en a besoin 🙏\n#GSNSemences #LaSaisonDuViolet",
+  tt:"Tu cherches des semences d'oignon ? Appelle le commercial de ta zone 📞 Numéros sur l'image !\n#semences #oignon #cotedivoire",
+  li:"Producteurs, coopératives, revendeurs : nos commerciaux couvrent le Nord, le Centre-Ouest, Abidjan et le Sud-Est. Bureau d'Abidjan : 07 58 11 31 54.\n#Distribution #Agribusiness"},
+ {n:16,w:4,d:'2026-11-14',day:'Sam 14 nov',t:'img',rub:'La Saison du Violet',title:'Nous sommes prêts. Et vous ?',file:'16_Sam14nov_Visuel_PretsPourLaSaison.jpg',
+  fb:"Nous sommes prêts. Et vous ? 💪🌱\nMerci d'avoir suivi La Saison du Violet ! L'Oignon Super et l'Oignon Violet de Galmi sont disponibles chez nos commerciaux. Bonne saison à tous les producteurs !\n📞 07 58 11 31 54\n#LaSaisonDuViolet #GSNSemences",
+  tt:"La saison est lancée, on est prêts 💪 Et toi ?\n#oignon #agriculture #cotedivoire #GSNSemences",
+  li:"Fin de notre campagne « La Saison du Violet » : un mois de conseils, d'images de terrain et d'échanges avec les producteurs. Merci à nos partenaires et bonne saison à tous.\n#Agriculture #GSNSemences"}
+];
+const WEEKS = [
+ {w:1,name:'Semaine 1 · Lancer',range:'19 – 25 octobre',goal:'Annoncer la saison et présenter les variétés stars.'},
+ {w:2,name:'Semaine 2 · Bien démarrer',range:'26 octobre – 1er novembre',goal:'Conseils de pépinière et de repiquage, images de terrain.'},
+ {w:3,name:'Semaine 3 · Prouver',range:'2 – 8 novembre',goal:'Le terrain, les producteurs et la qualité GSN.'},
+ {w:4,name:'Semaine 4 · Convertir',range:'9 – 14 novembre',goal:'Faire réagir, dire où acheter, clôturer la campagne.'}
+];
+const pad = n => String(n).padStart(2,'0');
+const media = p => p.t==='img' ? `media/p${pad(p.n)}.jpg` : `media/p${pad(p.n)}_poster.jpg`;
+let doneSet = new Set();
+try { doneSet = new Set(JSON.parse(localStorage.getItem('gsn-done')||'[]')); } catch(e) {}
+const saveDone = () => { try { localStorage.setItem('gsn-done', JSON.stringify([...doneSet])); } catch(e) {} };
+
+// Grille du mois
+const grid = document.getElementById('grid');
+['Semaine','Lun','Mar','Mer','Jeu','Ven','Sam','Dim'].forEach(h => { const d=document.createElement('div'); d.className='hd'; d.textContent=h; grid.appendChild(d); });
+const start = new Date(2026,9,19);
+WEEKS.forEach((wk,i) => {
+  const c=document.createElement('div'); c.className='wk'; c.innerHTML=`${wk.name.split(' · ')[1]}<span>S${wk.w}</span>`; grid.appendChild(c);
+  for (let k=0;k<7;k++){
+    const dt=new Date(start); dt.setDate(start.getDate()+i*7+k);
+    const iso=`${dt.getFullYear()}-${pad(dt.getMonth()+1)}-${pad(dt.getDate())}`;
+    const cell=document.createElement('div'); cell.className='day';
+    cell.appendChild(Object.assign(document.createElement('span'),{textContent:dt.getDate()+(dt.getDate()===1?' nov':'')}));
+    const p=P.find(x=>x.d===iso);
+    if(p){ const a=document.createElement('a'); a.href='#post'+p.n;
+      a.innerHTML=`<img src="${media(p)}" alt="" loading="lazy"><span class="lbl ${p.t==='vid'?'vid':''}">${p.t==='vid'?'▶ Vidéo':'Visuel'} · ${p.rub}</span>`;
+      cell.appendChild(a); }
+    grid.appendChild(cell);
+  }
+});
+
+// Semaines et cartes
+const weeksEl=document.getElementById('weeks');
+const NETS=[['fb','Facebook'],['tt','TikTok'],['li','LinkedIn']];
+WEEKS.forEach(wk=>{
+  const s=document.createElement('section'); s.className='week';
+  s.innerHTML=`<div class="weekhead"><h2>${wk.name}</h2><p>${wk.range} · ${wk.goal}</p></div><div class="cards"></div>`;
+  const cards=s.querySelector('.cards');
+  P.filter(p=>p.w===wk.w).forEach(p=>{
+    const c=document.createElement('article'); c.className='card'+(doneSet.has(p.n)?' isdone':''); c.id='post'+p.n;
+    const m = p.t==='img'
+      ? `<img src="media/p${pad(p.n)}.jpg" alt="Visuel : ${p.title}" loading="lazy">`
+      : `<video src="media/p${pad(p.n)}.mp4" poster="media/p${pad(p.n)}_poster.jpg" controls muted playsinline preload="none" aria-label="Vidéo : ${p.title}"></video>`;
+    c.innerHTML=`<div class="media">${m}</div>
+      <div class="info">
+        <div class="top"><span class="date">${pad(p.n)} · ${p.day}</span><span class="chip ${p.t==='vid'?'v':''}">${p.t==='vid'?'Vidéo':'Visuel'}</span><span class="chip">${p.rub}</span></div>
+        <p class="title">${p.title}</p>
+        <div class="file">${p.file}</div>
+        <div class="tabs" role="tablist">${NETS.map(([k,l],i)=>`<button role="tab" id="t${p.n}${k}" aria-selected="${i===0}" data-k="${k}"><span class="dot ${k}"></span>${l}</button>`).join('')}</div>
+        <pre class="text" role="tabpanel"></pre>
+        <div class="row"><button class="copy" type="button">Copier le texte</button>
+          <label class="done"><input type="checkbox" id="done${p.n}" ${doneSet.has(p.n)?'checked':''}> Publié</label></div>
+      </div>`;
+    const txt=c.querySelector('.text'); let cur='fb'; txt.textContent=p.fb;
+    c.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{
+      cur=b.dataset.k; txt.textContent=p[cur];
+      c.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));
+    }));
+    const cp=c.querySelector('.copy');
+    cp.addEventListener('click',()=>{
+      const done=()=>{cp.textContent='Copié';setTimeout(()=>cp.textContent='Copier le texte',1600);};
+      const sel=()=>{const r=document.createRange();r.selectNodeContents(txt);const s=getSelection();s.removeAllRanges();s.addRange(r);cp.textContent='Texte sélectionné';setTimeout(()=>cp.textContent='Copier le texte',1600);};
+      try{navigator.clipboard.writeText(p[cur]).then(done,sel);}catch(e){sel();}
+    });
+    c.querySelector('input').addEventListener('change',e=>{
+      e.target.checked?doneSet.add(p.n):doneSet.delete(p.n); c.classList.toggle('isdone',e.target.checked); saveDone();
+    });
+    cards.appendChild(c);
+  });
+  weeksEl.appendChild(s);
+});
+// Fichiers HD et téléchargements
+const SIZES = {"15_Ven13nov_Visuel_OuTrouverGSN.jpg": 339474, "GSN_LaSaisonDuViolet_Planning.pdf": 8196558, "16_Sam14nov_Visuel_PretsPourLaSaison.jpg": 426974, "05_Lun26oct_Visuel_ConseilPepiniere.jpg": 389922, "14_Mer11nov_Video_NosSemences.mp4": 4613266, "11_Ven06nov_Visuel_GraineRecolte.jpg": 639440, "09_Lun02nov_Visuel_ApresRepiquage.jpg": 324105, "13_Lun09nov_Visuel_TeamSuperGalmi.jpg": 446993, "03_Ven23oct_Visuel_Nos2Stars.jpg": 303462, "01_Lun19oct_Visuel_Lancement.jpg": 505154, "04_Sam24oct_Visuel_LeSaviezVous.jpg": 276926, "12_Sam07nov_Video_FierteProducteurs.mp4": 6539676, "08_Sam31oct_Video_DuChampAuMarche.mp4": 9393748, "07_Ven30oct_Visuel_SurLeTerrain.jpg": 466167, "06_Mer28oct_Video_ConseilRepiquage.mp4": 10002974, "10_Mer04nov_Video_SurLeTerrain.mp4": 13100278, "02_Mer21oct_Video_Teaser.mp4": 7651519};
+const fmt = b => b > 1e6 ? (b/1e6).toFixed(1).replace('.', ',') + ' Mo' : Math.round(b/1e3) + ' Ko';
+const fgrid = document.getElementById('fgrid');
+P.forEach(p => {
+  const t = document.createElement('div'); t.className = 'ftile';
+  t.innerHTML = `<a href="#post${p.n}"><img src="${media(p)}" alt="" loading="lazy"></a><div class="fn">${p.file}</div><div class="fs">${p.t==='vid'?'Vidéo MP4':'Visuel JPG'} · ${fmt(SIZES[p.file])}</div><button class="dl" type="button" data-file="${p.file}" hidden>Télécharger</button>`;
+  fgrid.appendChild(t);
+});
+document.querySelectorAll('.card .row').forEach((r,i) => {
+  const b = document.createElement('button'); b.className='dl'; b.type='button'; b.hidden=true; b.dataset.file=P[i].file; b.textContent='Télécharger le fichier';
+  r.insertBefore(b, r.querySelector('.done'));
+});
+(async () => {
+  let dl = null;
+  try { dl = window.claude && window.claude.use ? await window.claude.use('downloads') : null; } catch(e) { dl = null; }
+  const note = document.getElementById('dlnote');
+  if (!dl) { dl = { save: async ({ filename, data }) => { const u = URL.createObjectURL(data); const a = document.createElement('a'); a.href = u; a.download = filename; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 4000); } }; }
+  document.querySelectorAll('.dl').forEach(b => {
+    b.hidden = false;
+    const label = b.textContent;
+    b.addEventListener('click', async () => {
+      b.disabled = true; b.textContent = 'Préparation…';
+      try {
+        const r = await fetch('hd/' + b.dataset.file); if (!r.ok) throw new Error('fetch');
+        await dl.save({ filename: b.dataset.file, data: await r.blob() });
+        b.textContent = 'Téléchargé';
+      } catch (e) {
+        b.textContent = e && e.code === 'declined' ? label : 'Réessayer';
+      }
+      b.disabled = false; setTimeout(() => { if (b.textContent !== label) b.textContent = label; }, 2500);
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
